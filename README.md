@@ -1,7 +1,7 @@
 Common
 =========
 
-Install and configure AppArmor.
+Install default packages and configure some defaults.
 
 Example Playbook
 ----------------
@@ -20,4 +20,4 @@ Private
 Author Information
 ------------------
 
-Rick
+kcir
