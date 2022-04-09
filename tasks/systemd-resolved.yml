@@ -1,0 +1,31 @@
+---
+- name: Disable and stop systemd-resolved
+  systemd:
+    name: systemd-resolved.service
+    state: stopped
+    enabled: false
+    masked: true
+  when: (common_systemd_resolved_enabled is defined
+        and not common_systemd_resolved_enabled)
+
+- name: Configure systemd-resolved
+  block:
+
+    - name: Configure systemd-resolved
+      template:
+        src: resolved.conf.j2
+        dest: /etc/systemd/resolved.conf
+        owner: root
+        group: root
+        mode: '644'
+      notify: restart systemd-resolved
+
+    - name: Enable and start systemd-resolved
+      systemd:
+        name: systemd-resolved.service
+        state: started
+        enabled: true
+        masked: false
+
+  when: (common_systemd_resolved_enabled is defined
+        and common_systemd_resolved_enabled)

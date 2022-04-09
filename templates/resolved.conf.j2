@@ -1,0 +1,16 @@
+[Resolve]
+{% if common_systemd_resolved_dns is defined %}
+DNS={{ common_systemd_resolved_dns | join(' ') }}
+{% endif %}
+{% if common_systemd_resolved_fallbackdns is defined %}
+FallbackDNS={{ common_systemd_resolved_fallbackdns | join(' ') }}
+{% endif %}
+{% if common_systemd_resolved_dnssec is defined %}
+DNSSEC={{ common_systemd_resolved_dnssec }}
+{% endif %}
+{% if common_systemd_resolved_cache is defined %}
+Cache={{ common_systemd_resolved_cache }}
+{% endif %}
+{% if common_systemd_resolved_dns_stub_listener is defined %}
+DNSStubListener={{ common_systemd_resolved_dns_stub_listener }}
+{% endif %}

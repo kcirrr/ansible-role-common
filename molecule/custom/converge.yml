@@ -1,0 +1,22 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    common_apt_sources_configure: true
+    common_systemd_resolved_enabled: false
+    common_systemd_timesyncd_enabled: false
+
+  tasks:
+    - name: Create /etc/default/motd-news files and services
+      apt:
+        name:
+          - base-files
+          - motd-news-config
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: "Include ansible-role-common"
+      include_role:
+        name: "common"

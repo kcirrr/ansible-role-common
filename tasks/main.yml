@@ -1,0 +1,120 @@
+---
+- name: Configure apt sources
+  import_tasks: apt-sources.yml
+  when: (ansible_facts['distribution'] == "Ubuntu"
+        and common_apt_sources_configure is defined
+        and common_apt_sources_configure)
+
+- name: Configure systemd-resolved
+  import_tasks: systemd-resolved.yml
+  when: (ansible_facts['distribution'] == "Ubuntu"
+        and ansible_facts['distribution_major_version'] | int >= 18.04)
+        or (ansible_facts['distribution'] == "Debian"
+        and ansible_facts['distribution_major_version'] | int >= 11)
+
+- name: Configure resolv.conf
+  import_tasks: resolv-conf.yml
+  when: (common_resolv_conf_configure is defined
+        and common_resolv_conf_configure)
+
+- name: Make sure aptitude is installed
+  apt:
+    name: aptitude
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Make sure default packages are installed
+  apt:
+    name: '{{ common_default_packages }}'
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Make sure locales are configured
+  locale_gen:
+    name: '{{ item }}'
+    state: present
+  loop: '{{ common_locales }}'
+
+- name: Configure default locales
+  copy:
+    content: |
+      LANG={{ common_locale_default_lang }}
+      LC_TIME={{ common_locale_default_time }}
+    dest: /etc/default/locale
+    remote_src: true
+    mode: '644'
+
+- name: Configure timezone
+  timezone:
+    name: '{{ common_timezone }}'
+
+- name: Configure systemd-timesyncd
+  import_tasks: systemd-timesyncd.yml
+  when: (ansible_facts['distribution'] == "Ubuntu"
+        and ansible_facts['distribution_major_version'] | int >= 18.04)
+        or (ansible_facts['distribution'] == "Debian"
+        and ansible_facts['distribution_major_version'] | int >= 11)
+
+- name: Stat /etc/default/motd-news
+  stat:
+    path: /etc/default/motd-news
+  register: motd_news
+
+- name: Configure MOTD
+  block:
+
+    - name: Remove MOTD files
+      file:
+        path: '/etc/update-motd.d/{{ item }}'
+        state: absent
+      loop:
+        - 10-help-text
+        - 80-livepatch
+
+    - name: Disable motd-news
+      replace:
+        path: '/etc/default/motd-news'
+        regexp: '^ENABLED=1$'
+        replace: 'ENABLED=0'
+
+    - name: Disable motd-news timer
+      systemd:
+        name: motd-news.timer
+        enabled: false
+        masked: true
+        state: stopped
+
+    - name: Disable motd-news service
+      systemd:
+        name: motd-news.service
+        enabled: false
+        masked: true
+        state: stopped
+
+  when: (ansible_facts['distribution'] == "Ubuntu"
+        and ansible_facts['distribution_major_version'] | int >= 18.04)
+        and motd_news.stat.exists
+
+- name: Make sure the default editor is set to vim
+  alternatives:
+    name: editor
+    path: /usr/bin/vim.basic
+
+- name: Make sure dhparam.pem exists
+  copy:
+    dest: '{{ common_dhparam_file }}'
+    src: 'ffdhe{{ common_dhparam_size }}.pem'
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Make sure extra packages are installed
+  apt:
+    name: '{{ common_extra_packages }}'
+    state: present
+  when: common_extra_packages is defined
+
+- name: Flush handlers
+  meta: flush_handlers

@@ -1,0 +1,12 @@
+{{ ansible_managed | comment }}
+deb http://{{ common_apt_sources_mirror }}/ubuntu/ focal main restricted
+deb http://{{ common_apt_sources_mirror }}/ubuntu/ focal-updates main restricted
+deb http://{{ common_apt_sources_mirror }}/ubuntu/ focal universe
+deb http://{{ common_apt_sources_mirror }}/ubuntu/ focal-updates universe
+deb http://{{ common_apt_sources_mirror }}/ubuntu/ focal multiverse
+deb http://{{ common_apt_sources_mirror }}/ubuntu/ focal-updates multiverse
+deb http://{{ common_apt_sources_mirror }}/ubuntu/ focal-backports main restricted universe multiverse
+
+deb http://security.ubuntu.com/ubuntu/ focal-security main restricted
+deb http://security.ubuntu.com/ubuntu/ focal-security universe
+deb http://security.ubuntu.com/ubuntu/ focal-security multiverse

@@ -1,0 +1,20 @@
+---
+- name: Check if /etc/resolv.conf is a symlink
+  stat:
+    path: /etc/resolv.conf
+  register: resolv_conf
+
+- name: Remove /etc/resolv.conf symlink
+  file:
+    path: /etc/resolv.conf
+    state: absent
+  when: (resolv_conf.stat.islnk is defined
+        and resolv_conf.stat.islnk)
+
+- name: Configure resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: '644'

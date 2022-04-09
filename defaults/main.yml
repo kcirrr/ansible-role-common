@@ -1,0 +1,59 @@
+---
+common_locales:
+  - 'en_US.UTF-8'
+  - 'nl_NL.UTF-8'
+
+common_locale_default_lang: 'en_US.UTF-8'
+common_locale_default_time: 'nl_NL.UTF-8'
+
+common_dhparam_file: '/etc/ssl/certs/dhparam.pem'
+common_dhparam_size: '4096'
+
+common_timezone: 'Europe/Amsterdam'
+
+common_apt_sources_configure: false
+common_apt_sources_mirror: "nl.archive.ubuntu.com"
+
+common_systemd_timesyncd_enabled: true
+common_systemd_timesyncd_ntp:
+  - '0.nl.pool.ntp.org'
+  - '1.nl.pool.ntp.org'
+  - '2.nl.pool.ntp.org'
+  - '3.nl.pool.ntp.org'
+
+common_systemd_resolved_enabled: true
+common_systemd_resolved_dnssec: 'allow-downgrade'
+common_systemd_resolved_cache: 'yes'
+common_systemd_resolved_dns:
+  - '9.9.9.9'
+  - '149.112.112.112'
+common_systemd_resolved_fallbackdns:
+  - '1.1.1.1'
+  - '1.0.0.1'
+
+common_resolv_conf_configure: false
+common_resolv_conf_nameservers:
+  - '9.9.9.9'
+  - '149.112.112.112'
+
+common_default_packages:
+  - bash-completion
+  - bsd-mailx
+  - ca-certificates
+  - curl
+  - dnsutils
+  - haveged
+  - info
+  - locales
+  - lsof
+  - ncdu
+  - openssh-client
+  - python3-openssl
+  - python3-pip
+  - rsync
+  - ssl-cert
+  - strace
+  - telnet
+  - time
+  - vim
+  - wget

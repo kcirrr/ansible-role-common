@@ -1,0 +1,5 @@
+{% if common_resolv_conf_nameservers is defined %}
+{% for nameserver in common_resolv_conf_nameservers %}
+nameserver {{ nameserver }}
+{% endfor %}
+{% endif %}

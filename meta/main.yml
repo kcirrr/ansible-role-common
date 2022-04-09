@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  role_name: common
+  author: kcir
+  description: Install default packages and configure some defaults
+  company: NA
+
+  issue_tracker_url: https://gitlab.kcir.nl/ansible/roles/common/issues
+
+  license: Private
+
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+
+  galaxy_tags: []
+
+dependencies: []

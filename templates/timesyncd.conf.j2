@@ -1,0 +1,7 @@
+[Time]
+{% if common_systemd_timesyncd_ntp is defined %}
+NTP={{ common_systemd_timesyncd_ntp | join(' ') }}
+{% endif %}
+{% if common_systemd_timesyncd_fallback_ntp is defined %}
+FallbackNTP={{ common_systemd_timesyncd_fallback_ntp | join(' ') }}
+{% endif %}

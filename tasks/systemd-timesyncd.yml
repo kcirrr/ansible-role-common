@@ -1,0 +1,36 @@
+---
+- name: Disable and stop systemd-timesyncd
+  systemd:
+    name: systemd-timesyncd.service
+    state: stopped
+    enabled: false
+    masked: true
+  when: (common_systemd_timesyncd_enabled is defined
+        and not common_systemd_timesyncd_enabled)
+
+- name: Install and configure systemd-timesyncd
+  block:
+
+    - name: Install systemd-timesyncd
+      apt:
+        name: systemd-timesyncd
+        state: present
+
+    - name: Configure systemd-timesyncd
+      template:
+        src: timesyncd.conf.j2
+        dest: /etc/systemd/timesyncd.conf
+        owner: root
+        group: root
+        mode: '644'
+      notify: restart systemd-timesyncd
+
+    - name: Enable and start systemd-timesyncd
+      systemd:
+        name: systemd-timesyncd.service
+        state: started
+        enabled: true
+        masked: false
+
+  when: (common_systemd_timesyncd_enabled is defined
+        and common_systemd_timesyncd_enabled)
