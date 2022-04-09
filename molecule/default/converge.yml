@@ -14,4 +14,4 @@
 
     - name: "Include ansible-role-common"
       include_role:
-        name: "common"
+        name: "ansible-role-common"
