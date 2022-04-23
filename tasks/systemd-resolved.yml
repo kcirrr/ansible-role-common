@@ -18,14 +18,24 @@
         owner: root
         group: root
         mode: '644'
-      notify: restart systemd-resolved
+      register: resolved_conf
 
-    - name: Enable and start systemd-resolved
+    - name: Stop systemd-resolved
+      systemd:
+        name: systemd-resolved.service
+        state: stopped
+      when: resolved_conf is changed
+
+    - name: Make sure systemd-resolved is enabled
+      systemd:
+        name: systemd-resolved.service
+        enabled: true
+        masked: false
+
+    - name: Make sure systemd-resolved is started
       systemd:
         name: systemd-resolved.service
         state: started
-        enabled: true
-        masked: false
 
   when: (common_systemd_resolved_enabled is defined
         and common_systemd_resolved_enabled)
